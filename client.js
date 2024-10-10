@@ -26,7 +26,10 @@ const fetchById = async (id) => {
 }
 
 function getIdFromUser () {
-    let id = prompt("Enter an id: ");
+    let id; 
+    while(isNaN(parseInt(id))){
+        id = prompt("Enter an id: ");
+    }
     fetchById(id);
 }
 
