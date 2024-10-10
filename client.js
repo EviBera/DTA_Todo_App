@@ -25,5 +25,11 @@ const fetchById = async (id) => {
     }
 }
 
+function getIdFromUser () {
+    let id = prompt("Enter an id: ");
+    fetchById(id);
+}
+
 //fetchAll();
-fetchById(3);
+//fetchById(3);
+getIdFromUser();
