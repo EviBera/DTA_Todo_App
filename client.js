@@ -13,4 +13,17 @@ const fetchAll = async () => {
     }
 }
 
-fetchAll();
+const fetchById = async (id) => {
+    try {
+        const url = 'http://localhost:4000/' + id;
+        const response = await fetch(url);
+        const todo = await response.json();
+        console.log(todo);
+    }
+    catch (err) {
+        console.error(err.message);
+    }
+}
+
+//fetchAll();
+fetchById(3);
