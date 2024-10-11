@@ -1,17 +1,37 @@
 [
-    {
-        "id": 1,
-        "task": "washing up",
-        "idComplete": false
-    },
-    {
-        "id": 2,
-        "task": "cook lunch",
-        "idComplete": false
-    },
-    {
-        "id": 3,
-        "task": "do the homework",
-        "idComplete": false
-    }
+  {
+    "id": 1,
+    "task": "washing up",
+    "idComplete": false
+  },
+  {
+    "id": 2,
+    "task": "cook lunch",
+    "idComplete": false
+  },
+  {
+    "id": 3,
+    "task": "do the homework",
+    "idComplete": false
+  },
+  {
+    "id": 4,
+    "task": "bake a cake",
+    "isComplete": false
+  },
+  {
+    "id": 5,
+    "task": "take a walk",
+    "isComplete": false
+  },
+  {
+    "id": 6,
+    "task": "collect rosehip",
+    "isComplete": false
+  },
+  {
+    "id": 7,
+    "task": "iron shirts",
+    "isComplete": false
+  }
 ]
