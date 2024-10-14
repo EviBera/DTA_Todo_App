@@ -29,7 +29,7 @@ app.post('/', (req, res) => {
     const todos = getTodosList();
     const extendedTodos = [...todos, newTodo];
     try {
-        fs.writeFileSync('./data.json', JSON.stringify(extendedTodos, null, 2));
+        writeToFile(extendedTodos);
         res.status(201).json(newTodo);
     }
     catch(err){
@@ -47,17 +47,40 @@ app.put('/:id', (req, res) => {
             res.status(404).json({message: "This task does not exist."});
         } else {
             todos[updatableTaskIndex] = { ...todos[updatableTaskIndex], ...req.body };
-            fs.writeFileSync('./data.json', JSON.stringify(todos, null, 2));
+            writeToFile(todos);
             res.status(200).json(todos[updatableTaskIndex]);
         }
     }
     catch(err){
         console.log(err);
     }
-})
+});
+
+app.delete('/:id', (req, res) => {
+    try{
+        const todos = getTodosList();
+        const { id } = req.params;
+        let deletableTaskIndex = todos.findIndex(t => t.id === parseInt(id));
+
+        if(deletableTaskIndex === -1){
+            res.status(404).json({message: "This task does not exist."});
+        } else {
+            todos.splice(deletableTaskIndex, 1);
+            writeToFile(todos);
+            res.status(200).json({message: "Task has been deleted successfully."});
+        }
+    } 
+    catch(err) {
+        console.log(err);
+    }
+});
 
 function getTodosList() {
     return JSON.parse(fs.readFileSync('./data.json', 'utf8'));
+}
+
+function writeToFile(data) {
+    fs.writeFileSync('./data.json', JSON.stringify(data, null, 2));
 }
 
 const counter = () => {

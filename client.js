@@ -33,7 +33,7 @@ const fetchPost = async (task) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({"task" : task})
+            body: JSON.stringify({ "task": task })
         });
         const newTodo = await response.json();
         console.log(`New todo: ${JSON.stringify(newTodo)} has been created successfully`);
@@ -50,17 +50,36 @@ const fetchPut = async (id, task) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({"task" : task})
+            body: JSON.stringify({ "task": task })
         });
         const updatedTodo = await response.json();
 
-        if(response.status >= 200 && response.status <= 299){
+        if (response.status >= 200 && response.status <= 299) {
             console.log(`Todo has been updated successfully, the task is now: ${JSON.stringify(updatedTodo)}`);
         } else {
             throw new Error("Something went wrong." + updatedTodo.message);
         }
     }
-    catch(err) {
+    catch (err) {
+        console.log(err.message);
+    }
+}
+
+const fetchDelete = async (id) => {
+    try {
+        const url = baseUrl + id;
+        const response = await fetch(url, {
+            method: 'DELETE'
+        });
+        const content = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(`Something went wrong. ${content.message}`);
+        } else {
+            console.log(content.message);
+        }
+    }
+    catch (err) {
         console.log(err.message);
     }
 }
@@ -73,12 +92,12 @@ function getIdFromUser() {
     fetchById(id);
 }
 
-function getTaskFromUser() {
+function getNewTaskFromUser() {
     let task = prompt("If you would like to save a new task enter a short description: ");
     fetchPost(task);
 }
 
-function getUpdatesFromUser(){
+function getUpdatesFromUser() {
     console.log("You can update a task.")
     let id;
     while (isNaN(parseInt(id))) {
@@ -88,8 +107,29 @@ function getUpdatesFromUser(){
     fetchPut(id, newDescription);
 }
 
+function getNeedlesTaskIdFromUser() {
+    console.log("You can delete a task.");
+    let id;
+    while (isNaN(parseInt(id))) {
+        id = prompt("Enter the id of needless task: ");
+    }
+
+    let answer = "";
+    while(answer.toUpperCase() !== 'N' && answer.toUpperCase() !== 'Y') {
+        answer = prompt("Are you sure about deleting the task? (Y / N)");
+    }
+    
+    if(answer.toUpperCase() === 'N'){
+        return;
+    } else {
+        fetchDelete(id);
+    }
+    
+}
+
 //fetchAll();
 //fetchById(3);
 //getIdFromUser();
-//getTaskFromUser();
-getUpdatesFromUser();
+//getNewTaskFromUser();
+//getUpdatesFromUser();
+getNeedlesTaskIdFromUser();
