@@ -33,5 +33,10 @@
     "id": 8,
     "task": "pickle mashrooms",
     "isComplete": false
+  },
+  {
+    "id": 9,
+    "task": "warm up the whole house",
+    "isComplete": false
   }
 ]

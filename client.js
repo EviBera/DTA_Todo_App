@@ -1,12 +1,89 @@
 import promptSync from 'prompt-sync';
 
 const prompt = promptSync();
-const baseUrl = 'http://localhost:4000/';
+const baseUrl = 'http://localhost:4000';
+
+async function runConsoleApp() {
+    console.log("This is the Todo Console App, welcome!");
+
+    let shouldStartAgain = true;
+    
+    while(shouldStartAgain){
+        displayOptions()
+        let answer = getSelectionFromUser()
+        console.log("*** " + answer + " ***");
+    
+        const exit = await handleOptions(answer);
+        if (exit === 'Q'){
+            shouldStartAgain = false;
+            break;
+        }
+    
+        let choice = checkIfUserWantsToContinue();
+        if (choice === 'Q') {
+            shouldStartAgain = false;
+        }
+    }
+}
+
+function displayOptions() {
+    console.log("You can select an option with typing the letter in brackets: ");
+    console.log(" * List all tasks (L) ");
+    console.log(" * Check a task by its ID (C) ");
+    console.log(" * Add a new task (A) ");
+    console.log(" * Update a task (U) ");
+    console.log(" * Delete a task (D) ");
+    console.log(" * Quit the app (Q)");    
+}
+
+async function handleOptions(answer) {
+    switch (answer) {
+        case 'L':
+            console.log("Your tasks in the database: ");
+            await fetchAll();
+            break;
+        case 'C':
+            await getIdFromUser();
+            break;
+        case 'A':
+            await getNewTaskFromUser();
+            break;
+        case 'U':
+            await getUpdatesFromUser();
+            break;
+        case 'D':
+            await getNeedlesTaskIdFromUser();
+            break;
+        case 'Q':
+            return 'Q';
+        default:
+            return;
+    }
+}
+
+function getSelectionFromUser() {
+    const options = ['L', 'C', 'A', 'U', 'D', 'Q']
+    let answer = "";
+    while (!options.includes(answer.toUpperCase())) {
+        answer = prompt("Please, enter the first letter of your selection: ");
+    }
+
+    return answer.toUpperCase();
+}
+
+function checkIfUserWantsToContinue() {
+    let choice = "";
+    while (choice.toUpperCase() !== 'G' && choice.toUpperCase() !== 'Q') {
+        choice = prompt("Would you like to go on (G) or quit (Q)? ");
+    }
+
+    return choice.toUpperCase();
+}
 
 const fetchAll = async () => {
     try {
-        const response = await fetch();
-        const todos = await response.json(baseUrl);
+        const response = await fetch(baseUrl);
+        const todos = await response.json();
         console.log(todos);
     }
     catch (err) {
@@ -16,7 +93,7 @@ const fetchAll = async () => {
 
 const fetchById = async (id) => {
     try {
-        const url = baseUrl + id;
+        const url = baseUrl + "/" + id;
         const response = await fetch(url);
         const todo = await response.json();
         console.log(todo);
@@ -44,7 +121,7 @@ const fetchPost = async (task) => {
 
 const fetchPut = async (id, task) => {
     try {
-        const url = baseUrl + id;
+        const url = baseUrl + "/" + id;
         const response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -67,12 +144,12 @@ const fetchPut = async (id, task) => {
 
 const fetchDelete = async (id) => {
     try {
-        const url = baseUrl + id;
+        const url = baseUrl + "/" +id;
         const response = await fetch(url, {
             method: 'DELETE'
         });
         const content = await response.json();
-        
+
         if (!response.ok) {
             throw new Error(`Something went wrong. ${content.message}`);
         } else {
@@ -84,52 +161,48 @@ const fetchDelete = async (id) => {
     }
 }
 
-function getIdFromUser() {
+async function getIdFromUser() {
     let id;
     while (isNaN(parseInt(id))) {
         id = prompt("Enter an id: ");
     }
-    fetchById(id);
+    await fetchById(id);
 }
 
-function getNewTaskFromUser() {
+async function getNewTaskFromUser() {
     let task = prompt("If you would like to save a new task enter a short description: ");
-    fetchPost(task);
+    await fetchPost(task);
 }
 
-function getUpdatesFromUser() {
-    console.log("You can update a task.")
+async function getUpdatesFromUser() {
+    console.log("You can update a task by its id.")
     let id;
     while (isNaN(parseInt(id))) {
-        id = prompt("Enter an id: ");
+        id = prompt("Enter the id: ");
     }
     let newDescription = prompt("Type the new description: ");
-    fetchPut(id, newDescription);
+    await fetchPut(id, newDescription);
 }
 
-function getNeedlesTaskIdFromUser() {
-    console.log("You can delete a task.");
+async function getNeedlesTaskIdFromUser() {
+    console.log("You can delete a task by its id.");
     let id;
     while (isNaN(parseInt(id))) {
-        id = prompt("Enter the id of needless task: ");
+        id = prompt("Enter the id of the needless task: ");
     }
 
     let answer = "";
-    while(answer.toUpperCase() !== 'N' && answer.toUpperCase() !== 'Y') {
+    while (answer.toUpperCase() !== 'N' && answer.toUpperCase() !== 'Y') {
         answer = prompt("Are you sure about deleting the task? (Y / N)");
     }
-    
-    if(answer.toUpperCase() === 'N'){
+
+    if (answer.toUpperCase() === 'N') {
         return;
     } else {
-        fetchDelete(id);
+        await fetchDelete(id);
     }
-    
+
 }
 
-//fetchAll();
-//fetchById(3);
-//getIdFromUser();
-//getNewTaskFromUser();
-//getUpdatesFromUser();
-getNeedlesTaskIdFromUser();
+
+runConsoleApp();
