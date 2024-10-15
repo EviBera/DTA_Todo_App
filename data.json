@@ -2,12 +2,12 @@
   {
     "id": 2,
     "task": "cook lunch",
-    "idComplete": false
+    "isComplete": false
   },
   {
     "id": 3,
     "task": "do the homework",
-    "idComplete": false
+    "isComplete": true
   },
   {
     "id": 4,
@@ -37,6 +37,6 @@
   {
     "id": 9,
     "task": "warm up the whole house",
-    "isComplete": false
+    "isComplete": true
   }
 ]
